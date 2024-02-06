@@ -5,7 +5,12 @@ import random
 
 words = pd.read_csv('./data/french_words.csv')
 
-
+def flip_card():
+    canvas.itemconfig(card, image=card_back_img)
+    canvas.itemconfig(word_lang, text='English', fill='white')
+    french_word = canvas.itemcget(word_text, 'text')
+    english_translation = words[words['French'] == french_word]['English'].values[0]
+    canvas.itemconfig(word_text, text=english_translation, fill='white')
 
 
 def change_word():
@@ -14,7 +19,7 @@ def change_word():
     random_index = random.randint(0, 100)
     random_word = words.iloc[random_index].values[0]
     canvas.itemconfig(word_text, text=random_word, fill='black')
-
+    window.after(3000, flip_card)
 
 
 window = Tk()
