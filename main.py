@@ -21,7 +21,7 @@ def change_word(is_learnt):
     global words
     if is_learnt:
         words = words[~(words['English'] == canvas.itemcget(word_text, 'text'))]
-        words.to_csv('words_to_learn.csv')
+        words.to_csv('words_to_learn.csv', index=False)
     canvas.itemconfig(card, image=card_front_img)
     canvas.itemconfig(word_lang, text='French', fill='black')
     random_index = random.randint(0, 100)
