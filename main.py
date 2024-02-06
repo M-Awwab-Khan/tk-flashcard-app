@@ -3,7 +3,11 @@ from tkinter import *
 import pandas as pd
 import random
 
-words = pd.read_csv('./data/french_words.csv')
+try:
+    words = pd.read_csv('./data/words_to_learn.csv')
+except FileNotFoundError:
+    words = pd.read_csv('./data/french_words.csv')
+
 
 def flip_card():
     canvas.itemconfig(card, image=card_back_img)
@@ -13,7 +17,11 @@ def flip_card():
     canvas.itemconfig(word_text, text=english_translation, fill='white')
 
 
-def change_word():
+def change_word(is_learnt):
+    global words
+    if is_learnt:
+        words = words[~(words['English'] == canvas.itemcget(word_text, 'text'))]
+        words.to_csv('words_to_learn.csv')
     canvas.itemconfig(card, image=card_front_img)
     canvas.itemconfig(word_lang, text='French', fill='black')
     random_index = random.randint(0, 100)
@@ -38,11 +46,11 @@ word_text = canvas.create_text(400, 250, text='English', font=('SF Pro Display',
 canvas.grid(row=0, column=0, columnspan=2)
 
 correct_img = PhotoImage(file="./images/right.png")
-button = Button(image=correct_img, highlightthickness=0, command=change_word)
+button = Button(image=correct_img, highlightthickness=0, command=lambda x=True: change_word(x))
 button.grid(row=1, column=0)
 
 wrong_img = PhotoImage(file="./images/wrong.png")
-button = Button(image=wrong_img, highlightthickness=0, command=change_word)
+button = Button(image=wrong_img, highlightthickness=0, command=lambda x=False: change_word(x))
 button.grid(row=1, column=1)
 
 window.mainloop()
